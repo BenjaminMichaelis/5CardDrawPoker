@@ -113,7 +113,7 @@ bool check_pair(Hand hand)
 bool check_TwoPairs(Hand hand, Card excludeCard1, Card excludeCard2)
 {
     bool is_pair = false, is_pair2 = false;
-    int card = 0, card2 = 0, savecardpair1 = -1; //pair =0
+    int card = 0, card2 = 0, savecardpair1 = 0; //pair =0
     for (card = 0; card < 5; card++)
     {
         for (card2 = 0; card2 < 5 && card2 != card; card2++)
