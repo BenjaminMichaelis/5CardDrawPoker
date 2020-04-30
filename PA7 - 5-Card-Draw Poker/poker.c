@@ -6,7 +6,7 @@ void game_controller(const int deck[][FACES], const char* face[], const char* su
     shuffle(deck);
     deal(deck, face, suit, p1_hand, dealer_hand);
     p1pair = check_pair(p1_hand);
-    p12pairs = check_TwoPairs(p1_hand);
+    //p12pairs = checkTwoPairs(p1_hand);
 }
 
 int runmenu()
@@ -110,21 +110,11 @@ bool check_pair(Hand hand)
     return is_pair;
 }
 
-bool check_TwoPairs(Hand hand, Card excludeCard1, Card excludeCard2)
+bool checkTwoPairs(Hand hand, Card excludeCards[])
 {
     bool is_pair = false, is_pair2 = false;
     int card = 0, card2 = 0, savecardpair1 = 0; //pair =0
-    for (card = 0; card < 5; card++)
-    {
-        for (card2 = 0; card2 < 5 && card2 != card; card2++)
-        {
-            if (hand.player_hand[card].face_index == hand.player_hand[card2].face_index)
-            {
-                is_pair = true;
-                card = savecardpair1;
-            }
-        }
-    }
+   
     for (card = 0; card < 5; card++)
     {
         for (card2 = 0; card2 < 5 && card2 != card; card2++)
@@ -140,4 +130,124 @@ bool check_TwoPairs(Hand hand, Card excludeCard1, Card excludeCard2)
         }
     }
     return (is_pair && is_pair2);
+}
+
+//int getSizeIntOfArray(int array[])
+//{
+//    int first = sizeof(array);
+//    int second = sizeof(array[0]);
+//    return first / second;
+//}
+int getMaxElementInArray(int array[], int arraySize)
+{
+    int maximum = array[0];
+    int arraysize = 0;
+
+    // TODO: Calculate array size/
+    for (int c = 1; c < arraySize; c++)
+    {
+        if (array[c] > maximum)
+        {
+            maximum = array[c];
+        }
+    }
+    return maximum;
+}
+
+// Rename to ScoreHand(...)
+int getMaxNumberSameCard(Hand hand)
+{
+    int cardCount[13] = { 0 };
+
+    for (int i = 1; i < 5; i++)
+    {
+        for (int j = 0; j < 5; j++)
+        {
+            if (i != j && hand.player_hand[i].face_index == hand.player_hand[j].face_index)
+            {
+                cardCount[hand.player_hand[i].face_index]++;
+                break;
+            }
+        }
+    }
+    return getMaxElementInArray(cardCount, 13);
+}
+
+int scoreHand(Hand hand)
+{
+    int maxSameCard = getMaxNumberSameCard(hand);
+    int score;
+    switch (maxSameCard)
+    {
+    case 4:
+        score = 3;
+        break;
+    case 3:
+        score = 7;
+        break;
+    case 2:
+        // TODO Check for two pair.
+        if (true)
+        {
+            score = 8;
+            break;
+        }
+        else
+        {
+            score = 9;
+            break;
+        }
+    case 1:
+        // TODO Check for straight.
+
+        if (true)
+        {
+            score = 8;
+            break;
+        }
+        else
+        {
+            score = 10;
+            break;
+        }
+    default:
+        // TODO: Write there is an error in the logic
+        score = INT_MAX;
+        break;
+    }
+
+    return score;
+}
+
+
+bool checkStraight(Hand hand)
+{
+    bubble_sort(hand, 5);
+    for (int i = 1; i < 5; i++)
+    {
+        if (hand.player_hand[i].face_index - 1 != hand.player_hand[i - 1].face_index)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+void bubble_sort(Hand hand, int num_items)
+{
+    int passes = 0, temp = 0, index = 0;
+
+    for (passes = 1; passes < num_items; ++passes)
+    {
+        for (index = 0; index < num_items - passes; ++index)
+        {
+            if (hand.player_hand[index].face_index > hand.player_hand[index + 1].face_index)
+            {
+                //swap
+                temp = hand.player_hand[index].face_index;
+                hand.player_hand[index].face_index = hand.player_hand[index + 1].face_index;
+                hand.player_hand[index + 1].face_index = temp;
+            }
+        }
+    }
 }

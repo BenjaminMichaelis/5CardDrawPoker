@@ -1,21 +1,16 @@
 // Authors: Deitel & Deitel - C How to Program
 
 #include "poker.h"
+#include "tests.h"
 
 int main(void)
 {
-    bool test = false;
-    Hand testhand = { 0 };
-    
-    testhand.player_hand[0].face_index = 0;
-    testhand.player_hand[1].face_index = 12;
-    testhand.player_hand[2].face_index = 2;
-    testhand.player_hand[3].face_index = 3;
-    testhand.player_hand[4].face_index = 9;
- 
-    test = check_pair(testhand);
 
+    Test_getMaxElementInArray();
 
+    Test_getMaxNumberSameCard();
+
+    Test_checkStraight();
 
     return 0;
 
@@ -60,6 +55,4 @@ int main(void)
 
     return 0;
 }
-
-
 

@@ -140,8 +140,10 @@
   <ItemGroup>
     <ClCompile Include="main.c" />
     <ClCompile Include="poker.c" />
+    <ClCompile Include="tests.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="tests.h" />
     <ClInclude Include="poker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
