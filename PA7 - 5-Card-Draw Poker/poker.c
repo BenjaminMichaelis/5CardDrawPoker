@@ -8,7 +8,11 @@ void game_controller(const int deck[][FACES], const char* face[], const char* su
     deal(deck, face, suit, p1_hand, dealer_hand);
     //p1pair = check_pair(p1_hand);
     //p12pairs = checkTwoPairs(p1_hand);
+<<<<<<< HEAD
     scoreHand(p1_hand);
+=======
+    scoreHand(p1_hand, indexForRejectedCards);
+>>>>>>> 305192d... with index to reject cards, before evaluation of hand
 }
 
 int runmenu()
@@ -157,7 +161,11 @@ int getMaxElementInArray(int array[], int arraySize)
 }
 
 // Rename to ScoreHand(...)
+<<<<<<< HEAD
 int getMaxNumberSameCard(Hand hand, int* cardCountArrayToScoreHand)
+=======
+int getMaxNumberSameCard(Hand hand, int* indexForRejectedCards, int* cardCountArrayToScoreHand)
+>>>>>>> 305192d... with index to reject cards, before evaluation of hand
 {
     /*printf("%d,%d,%d", indexForRejectedCards[0], indexForRejectedCards[1], indexForRejectedCards[2]);*/
     int cardCount[13] = { 0 };
@@ -180,10 +188,17 @@ int getMaxNumberSameCard(Hand hand, int* cardCountArrayToScoreHand)
     return getMaxElementInArray(cardCount, 13);
 }
 //TODO: check address for indexForRejectedCards in lines 160 and 179
+<<<<<<< HEAD
 int scoreHand(Hand hand)
 {
     int cardCount[13];
     int maxSameCard = getMaxNumberSameCard(hand, cardCount);
+=======
+int scoreHand(Hand hand, int* indexForRejectedCards)
+{
+    int cardCount[13];
+    int maxSameCard = getMaxNumberSameCard(hand, indexForRejectedCards, cardCount);
+>>>>>>> 305192d... with index to reject cards, before evaluation of hand
     int score;
     switch (maxSameCard)
     {
