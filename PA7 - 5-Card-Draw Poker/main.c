@@ -2,17 +2,20 @@
 
 #include "poker.h"
 #include "tests.h"
+#include "main.h"
 
 int main(void)
 {
+    Test_scoreHand();
 
+    //getMaxNumberSameCard(p1_hand1, indexForRejectedCards1);
     Test_getMaxElementInArray();
 
     Test_getMaxNumberSameCard();
 
     Test_checkStraight();
 
-    return 0;
+    //return 0;
 
     int menuoption = -1;
     /* initialize suit array */
@@ -55,4 +58,6 @@ int main(void)
 
     return 0;
 }
+
+
 

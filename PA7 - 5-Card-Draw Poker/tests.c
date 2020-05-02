@@ -4,17 +4,41 @@
 int Test_getMaxNumberSameCard()
 {
     Hand testhand = { 0 };
+    int indexForRejectedCards2[3] = { 5,6,8 };
+    int countCardsTest[13] = { 5,6,8 };
     testhand.player_hand[0].face_index = 0;
     testhand.player_hand[1].face_index = 12;
     testhand.player_hand[2].face_index = 12;
     testhand.player_hand[3].face_index = 3;
     testhand.player_hand[4].face_index = 12;
 
-    AreIntEqual(3, getMaxNumberSameCard(testhand), "getMaxNumberSameCard did not return expected value");
+    AreIntEqual(3, getMaxNumberSameCard(testhand, &indexForRejectedCards2, countCardsTest), "getMaxNumberSameCard did not return expected value");
+    AreIntEqual(0, indexForRejectedCards2[0], "getMaxNumberSameCard returned an unexpected rejected card");
     testhand.player_hand[3].face_index = 0;
-    AreIntEqual(3, getMaxNumberSameCard(testhand), "getMaxNumberSameCard did not return expected value");
+    AreIntEqual(3, getMaxNumberSameCard(testhand, &indexForRejectedCards2, countCardsTest), "getMaxNumberSameCard did not return expected value");
+    testhand.player_hand[2].face_index = 4;
+    AreIntEqual(2, getMaxNumberSameCard(testhand, &indexForRejectedCards2, countCardsTest), "getMaxNumberSameCard did not return expected value");
 }
 
+void Test_scoreHand()
+{
+    int score;
+    Hand testhand = { 0 };
+    int indexForRejectedCards1[3] = { 5,6,8 };
+    testhand.player_hand[0].face_index = 0;
+    testhand.player_hand[1].face_index = 12;
+    testhand.player_hand[2].face_index = 12;
+    testhand.player_hand[3].face_index = 3;
+    testhand.player_hand[4].face_index = 12;
+    score = scoreHand(testhand, indexForRejectedCards1);
+    AreIntEqual(ScoreValueThreeOfAKind, score, "Returned score was unexpected");
+
+    testhand.player_hand[4].face_index = 9;
+    score = scoreHand(testhand, indexForRejectedCards1);
+    AreIntEqual(ScoreValuePair, score, "Returned score was unexpected");
+
+    // TODO: Add additional tests
+}
 
 void Test_getMaxElementInArray()
 {
@@ -55,12 +79,19 @@ void Test_checkStraight()
     testhand.player_hand[4].face_index = 12;
     IsTrue(!checkStraight(testhand), "checkStraight Unexpectedly returned true");
 
-    int i = 8;
+    int i = 5;
     testhand.player_hand[0].face_index = i++;
     testhand.player_hand[1].face_index = i++;
     testhand.player_hand[2].face_index = i++;
     testhand.player_hand[3].face_index = i++;
     testhand.player_hand[4].face_index = i++;
+    IsTrue(checkStraight(testhand), "checkStraight Unexpectedly returned true");
+    
+    testhand.player_hand[0].face_index = 8;
+    testhand.player_hand[1].face_index = 5;
+    testhand.player_hand[2].face_index = 6;
+    testhand.player_hand[3].face_index = 9;
+    testhand.player_hand[4].face_index = 7;
     IsTrue(checkStraight(testhand), "checkStraight Unexpectedly returned true");
 }
 

@@ -3,10 +3,12 @@
 void game_controller(const int deck[][FACES], const char* face[], const char* suit[], Hand p1_hand, Hand dealer_hand)
 {
     bool p1pair, p12pairs;
+    int indexForRejectedCards[3] = { 5,6,8 };
     shuffle(deck);
     deal(deck, face, suit, p1_hand, dealer_hand);
-    p1pair = check_pair(p1_hand);
+    //p1pair = check_pair(p1_hand);
     //p12pairs = checkTwoPairs(p1_hand);
+    scoreHand(p1_hand, indexForRejectedCards);
 }
 
 int runmenu()
@@ -155,8 +157,9 @@ int getMaxElementInArray(int array[], int arraySize)
 }
 
 // Rename to ScoreHand(...)
-int getMaxNumberSameCard(Hand hand)
+int getMaxNumberSameCard(Hand hand, int* indexForRejectedCards, int* cardCountArrayToScoreHand)
 {
+    /*printf("%d,%d,%d", indexForRejectedCards[0], indexForRejectedCards[1], indexForRejectedCards[2]);*/
     int cardCount[13] = { 0 };
 
     for (int i = 1; i < 5; i++)
@@ -170,12 +173,17 @@ int getMaxNumberSameCard(Hand hand)
             }
         }
     }
+    for (int k = 0; k < 13; k++)
+    {
+        cardCountArrayToScoreHand[k] = cardCount[k];
+    }
     return getMaxElementInArray(cardCount, 13);
 }
-
-int scoreHand(Hand hand)
+//TODO: check address for indexForRejectedCards in lines 160 and 179
+int scoreHand(Hand hand, int* indexForRejectedCards)
 {
-    int maxSameCard = getMaxNumberSameCard(hand);
+    int cardCount[13];
+    int maxSameCard = getMaxNumberSameCard(hand, indexForRejectedCards, cardCount);
     int score;
     switch (maxSameCard)
     {
@@ -183,24 +191,22 @@ int scoreHand(Hand hand)
         score = 3;
         break;
     case 3:
-        score = 7;
+        score = ScoreValueThreeOfAKind;
         break;
     case 2:
         // TODO Check for two pair.
-        if (true)
+        if (false) 
         {
             score = 8;
             break;
         }
-        else
+        else //pair
         {
-            score = 9;
+            score = ScoreValuePair;
             break;
         }
     case 1:
-        // TODO Check for straight.
-
-        if (true)
+        if (checkStraight(hand))
         {
             score = 8;
             break;
@@ -222,7 +228,7 @@ int scoreHand(Hand hand)
 
 bool checkStraight(Hand hand)
 {
-    bubble_sort(hand, 5);
+    bubble_sort(&hand, 5);
     for (int i = 1; i < 5; i++)
     {
         if (hand.player_hand[i].face_index - 1 != hand.player_hand[i - 1].face_index)
@@ -233,7 +239,7 @@ bool checkStraight(Hand hand)
     return true;
 }
 
-void bubble_sort(Hand hand, int num_items)
+void bubble_sort(Hand* hand, int num_items)
 {
     int passes = 0, temp = 0, index = 0;
 
@@ -241,12 +247,12 @@ void bubble_sort(Hand hand, int num_items)
     {
         for (index = 0; index < num_items - passes; ++index)
         {
-            if (hand.player_hand[index].face_index > hand.player_hand[index + 1].face_index)
+            if (hand->player_hand[index].face_index > hand->player_hand[index + 1].face_index)
             {
                 //swap
-                temp = hand.player_hand[index].face_index;
-                hand.player_hand[index].face_index = hand.player_hand[index + 1].face_index;
-                hand.player_hand[index + 1].face_index = temp;
+                temp = hand->player_hand[index].face_index;
+                hand->player_hand[index].face_index = hand->player_hand[index + 1].face_index;
+                hand->player_hand[index + 1].face_index = temp;
             }
         }
     }

@@ -143,6 +143,7 @@
     <ClCompile Include="tests.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="main.h" />
     <ClInclude Include="tests.h" />
     <ClInclude Include="poker.h" />
   </ItemGroup>
