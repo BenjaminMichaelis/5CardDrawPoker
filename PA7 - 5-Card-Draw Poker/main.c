@@ -1,22 +1,14 @@
 // Authors: Deitel & Deitel - C How to Program
+//include resources/help from: Stackoverflow.com, Mark Michaelis
+//This is PA7 - 5 Card Draw Poker - rules are from wikipedia,
+//code started with starter code from Deitel & Deitel
 
 #include "poker.h"
 #include "tests.h"
 
 int main(void)
 {
-    Test_deal();
-    Test_dealOneCard();
-    Test_scoreHand();
-
-    //getMaxNumberSameCard(p1_hand1, indexForRejectedCards1);
-    Test_getMaxElementInArray();
-
-    Test_getMaxNumberSameCard();
-
-    Test_checkStraight();
-
-    //return 0;
+    runAllTests();
 
     int menuoption = -1;
     /* initialize suit array */

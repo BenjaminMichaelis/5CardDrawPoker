@@ -10,15 +10,15 @@ const char* g_face[TOTAL_NUMBER_OF_FACES] = { "Ace", "Deuce", "Three", "Four", "
 /* initalize deck array */
 int g_deckMultidimensionalArray[4][TOTAL_NUMBER_OF_FACES] = { 0 };
 
-Card g_deck[] = { 0 };
+Card g_deck[TOTAL_NUMBER_OF_CARDS] = { 0 };
 
-void game_controller(Hand p1_hand, Hand dealer_hand)
+void game_controller(Hand player1Hand, Hand dealerHand)
 {
-    shuffle(g_deckMultidimensionalArray);
-    deal(p1_hand, dealer_hand);
+    shuffleDeck();
+    deal(&player1Hand, &dealerHand);
     //p1pair = check_pair(p1_hand);
     //p12pairs = checkTwoPairs(p1_hand);
-    scoreHand(p1_hand);
+    scoreHand(player1Hand);
 }
 
 
@@ -55,12 +55,55 @@ void swap(Card* a, Card* b)
     *b = temp;
 }
 
+Card* g_pNextCard;
+int g_currentNextCardIndex; 
 void shuffleDeck()
 {
+    g_currentNextCardIndex = 0;
+    g_pNextCard = g_deck;
+    int deckIndex = 0;
+    for (int eachSuit = 0; eachSuit < TOTAL_NUMBER_OF_SUITS; eachSuit++)
+    {
+        for (int eachFaceCard = 0; eachFaceCard < TOTAL_NUMBER_OF_FACES; eachFaceCard++)
+        {
+            g_deck[deckIndex].suit_index = eachSuit;
+            g_deck[deckIndex].face_index = eachFaceCard;
+            deckIndex++;
+        }
+    }
 
+    for (int i = 0; i < TOTAL_NUMBER_OF_CARDS; i++)
+    {
+        // Pick a random index from 0 to i  
+        int j = rand() % (i + 1);
+
+        // Swap arr[i] with the element  
+        // at random index  
+        swap(&g_deck[i], &g_deck[j]);
+    }
+}
+
+Card pullNextCardFromDeck()
+{
+    // return the next card and increment the pointer.
+    if (g_currentNextCardIndex++ > TOTAL_NUMBER_OF_CARDS)
+    {
+        perror("Invalid operation: Indexing off the end of the end of the deck.");
+    }
+    return *g_pNextCard++;
+}
+
+void deal(Hand* pPlayer1Hand, Hand* pPlayer2Hand)
+{
+    for (int i = 0; i < NUMBER_OF_CARDS_IN_HAND; i++)
+    {
+        pPlayer1Hand->player_hand[i] = pullNextCardFromDeck();
+        pPlayer2Hand->player_hand[i] = pullNextCardFromDeck();
+    }
 }
 
 
+#ifdef BENJAMIN
 /* shuffle cards in deck */
 void shuffle()
 {
@@ -147,6 +190,8 @@ void deal(Hand p1_hand, Hand dealer_hand)
         }
     }
 }
+#endif BENJAMIN
+
 
 bool check_pair(Hand hand)
 {
