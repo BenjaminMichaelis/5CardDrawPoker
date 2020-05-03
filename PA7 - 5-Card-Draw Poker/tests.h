@@ -1,9 +1,14 @@
 void Test_getMaxElementInArray();
 
-void AreIntEqual(int expected, int actual, char  message[51]);
+void Test_scoreHand();
 
-void IsTrue(bool actual, char message[51]);
+void AreIntEqual(int expected, int actual, const char*  message);
+
+void IsTrue(bool actual, const char* message);
 
 void Test_checkStraight();
 
-int Test_getMaxNumberSameCard();
+
+void print(const char* message);
+
+void Test_getMaxNumberSameCard();

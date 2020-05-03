@@ -15,6 +15,7 @@
 #include <time.h>
 #include <stdbool.h>
 #include <Bits.h>
+#include <string.h>
 
 typedef struct card
 {
@@ -36,10 +37,10 @@ void deal(const int wDeck[][FACES], const char* wFace[], const char* wSuit[], Ha
 void game_controller(const int deck[][FACES], const char* face[], const char* suit[], Hand p1_hand, Hand dealer_hand);
 bool check_pair(Hand hand);
 //bool checkTwoPairs(Hand hand, Card excludeCards);
-int scoreHand(Hand hand, int* indexForRejectedCards[]);
+int scoreHand(Hand hand);
 bool checkStraight(Hand hand);
 void bubble_sort(Hand* hand, int num_items);
-int getMaxNumberSameCard(Hand hand, int* indexForRejectedCards[]);
+int getMaxNumberSameCard(Hand hand);
 
 
 enum ScoreValue { ScoreValueThreeOfAKind = 7, ScoreValuePair = 9};
@@ -48,7 +49,7 @@ enum ScoreValue { ScoreValueThreeOfAKind = 7, ScoreValuePair = 9};
 
 int getMaxElementInArray(int array[], int arraySize);
 
-int getMaxNumberSameCard(Hand hand, int* indexForRejectedCards, int* cardCountArrayToScoreHand);
+int getMaxNumberSameCard(Hand hand, int* cardCountArrayToScoreHand);
 
 //int scoreHand(int maxSameCard, int* indexForRejectedCards[]);
 
