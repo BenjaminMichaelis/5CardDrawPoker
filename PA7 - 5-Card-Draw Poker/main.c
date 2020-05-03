@@ -5,6 +5,8 @@
 
 int main(void)
 {
+    Test_deal();
+    Test_dealOneCard();
     Test_scoreHand();
 
     //getMaxNumberSameCard(p1_hand1, indexForRejectedCards1);

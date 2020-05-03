@@ -17,6 +17,8 @@
 #include <Bits.h>
 #include <string.h>
 
+
+
 typedef struct card
 {
     int suit_index;
@@ -33,20 +35,23 @@ int runmenu();
 int getint();
 void displayrules();
 void shuffle(int wDeck[][FACES]);
+void dealOneCard(const int wDeck[][FACES], const char* wFace[], const char* wSuit[], Hand hand, int indexToReplace);
+int getCardValue();
 void deal(const int wDeck[][FACES], const char* wFace[], const char* wSuit[], Hand p1_hand, Hand dealer_hand);
 void game_controller(const int deck[][FACES], const char* face[], const char* suit[], Hand p1_hand, Hand dealer_hand);
 bool check_pair(Hand hand);
 //bool checkTwoPairs(Hand hand, Card excludeCards);
 int scoreHand(Hand hand);
 bool checkStraight(Hand hand);
+bool checkFlush(Hand hand);
 void bubble_sort(Hand* hand, int num_items);
-
-enum ScoreValue { ScoreValueThreeOfAKind = 7, ScoreValuePair = 9};
+bool checkTwoPair(int cardCount[]);
+enum ScoreValue { ScoreValueThreeOfAKind = 7, ScoreValuePair = 9, ScoreValueTwoPair = 8, ScoreValueStraight = 6, ScoreValueFlush = 5};
 
 //int getSizeIntOfArray(int array[]);
 
 int getMaxElementInArray(int array[], int arraySize);
-int getMaxNumberSameCard(Hand hand, int* cardCountArrayToScoreHand);
+int getMaxNumberSameCard(Hand hand, int* cardCountArrayToScoreHand[]);
 
 //int scoreHand(int maxSameCard, int* indexForRejectedCards[]);
 

@@ -2,13 +2,20 @@
 
 void game_controller(const int deck[][FACES], const char* face[], const char* suit[], Hand p1_hand, Hand dealer_hand)
 {
+    int card = 0;   /* card counter */
     int indexForRejectedCards[3] = { 5,6,8 };
     shuffle(deck);
     deal(deck, face, suit, p1_hand, dealer_hand);
     //p1pair = check_pair(p1_hand);
     //p12pairs = checkTwoPairs(p1_hand);
     scoreHand(p1_hand);
+    for  (int i = 0; i < 5;  i++)
+    {
+        printf("Card: %d: %5s of %-8s\n", card, face[p1_hand.player_hand[i].face_index], suit[p1_hand.player_hand[i].suit_index]);
+
+    }
 }
+
 
 int runmenu()
 {
@@ -58,12 +65,41 @@ void shuffle(int wDeck[][FACES])
     }
 }
 
+int card = 0;
+void dealOneCard(const int wDeck[][FACES], const char* wFace[], const char* wSuit[], Hand hand, int indexToReplace)
+{
+    //int card = *cardPointer;
+    int row = 0;    /* row number */
+    int column = 0; /*column number */
+    /* loop through rows of wDeck */
+    for (row = 0; row < SUITS; row++)
+    {
+        /* loop through columns of wDeck for current row */
+        for (column = 0; column < FACES; column++)
+        {
+            if (wDeck[row][column] == card)
+            {
+                hand.player_hand[indexToReplace].face_index = column;
+                hand.player_hand[indexToReplace].suit_index = row;
+            }
+        }
+    }
+    card++;
+    //*cardPointer = card;
+}
+
+int getCardValue()
+{
+    return card;
+}
+
+
 /* deal cards in deck */
 void deal(const int wDeck[][FACES], const char* wFace[], const char* wSuit[], Hand p1_hand, Hand dealer_hand)
 {
     int row = 0;    /* row number */
     int column = 0; /*column number */
-    int card = 0;   /* card counter */
+    //card = *cardPointer;
     int cards_dealer = 0; //number of cards dealt dealer counter to keep track in array
 
     /* deals 2 hands worth of 5 cards each (5*2=10) */
@@ -156,7 +192,7 @@ int getMaxElementInArray(int array[], int arraySize)
 }
 
 // Rename to ScoreHand(...)
-int getMaxNumberSameCard(Hand hand, int* cardCountArrayToScoreHand)
+int getMaxNumberSameCard(Hand hand, int* cardCountArrayToScoreHand[])
 {
     /*printf("%d,%d,%d", indexForRejectedCards[0], indexForRejectedCards[1], indexForRejectedCards[2]);*/
     int cardCount[13] = { 0 };
@@ -171,6 +207,7 @@ int getMaxNumberSameCard(Hand hand, int* cardCountArrayToScoreHand)
     }
     return getMaxElementInArray(cardCount, 13);
 }
+
 //TODO: check address for indexForRejectedCards in lines 160 and 179
 int scoreHand(Hand hand)
 {
@@ -179,17 +216,17 @@ int scoreHand(Hand hand)
     int score;
     switch (maxSameCard)
     {
-    case 4:
+    case 4: // four of a kind
         score = 3;
         break;
-    case 3:
+    case 3: //three of a kind
         score = ScoreValueThreeOfAKind;
         break;
-    case 2:
+    case 2: // at least one pair
         // TODO Check for two pair.
-        if (false)
+        if (checkTwoPair(cardCount))// two pair
         {
-            score = 8;
+            score = ScoreValueTwoPair;
             break;
         }
         else //pair
@@ -198,9 +235,14 @@ int scoreHand(Hand hand)
             break;
         }
     case 1:
-        if (checkStraight(hand))
+        if (checkFlush(hand))
         {
-            score = 8;
+            score = ScoreValueFlush;
+            break;
+        }
+        else if (checkStraight(hand))
+        {
+            score = ScoreValueStraight;
             break;
         }
         else
@@ -214,6 +256,7 @@ int scoreHand(Hand hand)
         break;
     }
 
+
     return score;
 }
 
@@ -224,6 +267,18 @@ bool checkStraight(Hand hand)
     for (int i = 1; i < 5; i++)
     {
         if (hand.player_hand[i].face_index - 1 != hand.player_hand[i - 1].face_index)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool checkFlush(Hand hand)
+{
+    for (int i = 1; i < 5; i++)
+    {
+        if (hand.player_hand[i].suit_index != hand.player_hand[i - 1].suit_index)
         {
             return false;
         }
@@ -247,5 +302,25 @@ void bubble_sort(Hand* hand, int num_items)
                 hand->player_hand[index + 1].face_index = temp;
             }
         }
+    }
+}
+
+bool checkTwoPair(int cardCount[])
+{
+    int numberOfPairs = 0;
+    for (int i = 0; i < 13; i++)
+    {
+        if (cardCount[i] >= 2)
+        {
+            numberOfPairs++;
+        }
+    }
+    if (numberOfPairs >= 2)
+    {
+        return true;
+    }
+    else
+    {
+    return false;
     }
 }
