@@ -1,19 +1,24 @@
 #include "poker.h"
 
-void game_controller(const int deck[][FACES], const char* face[], const char* suit[], Hand p1_hand, Hand dealer_hand)
+/* initialize suit array */
+const char* g_suit[4] = { "Hearts", "Diamonds", "Clubs", "Spades" };
+
+/* initialize face array */
+const char* g_face[TOTAL_NUMBER_OF_FACES] = { "Ace", "Deuce", "Three", "Four", "Five", "Six", "Seven", "Eight",
+    "Nine", "Ten", "Jack", "Queen", "King" };
+
+/* initalize deck array */
+int g_deckMultidimensionalArray[4][TOTAL_NUMBER_OF_FACES] = { 0 };
+
+Card g_deck[] = { 0 };
+
+void game_controller(Hand p1_hand, Hand dealer_hand)
 {
-    int card = 0;   /* card counter */
-    int indexForRejectedCards[3] = { 5,6,8 };
-    shuffle(deck);
-    deal(deck, face, suit, p1_hand, dealer_hand);
+    shuffle(g_deckMultidimensionalArray);
+    deal(p1_hand, dealer_hand);
     //p1pair = check_pair(p1_hand);
     //p12pairs = checkTwoPairs(p1_hand);
     scoreHand(p1_hand);
-    for  (int i = 0; i < 5;  i++)
-    {
-        printf("Card: %d: %5s of %-8s\n", card, face[p1_hand.player_hand[i].face_index], suit[p1_hand.player_hand[i].suit_index]);
-
-    }
 }
 
 
@@ -43,59 +48,72 @@ void displayrules()
     printf("Each player is dealt 5 cards that they can look at.\nYou will then have the opportunity to replace cards in your hand with new cards drawn\nthe player with the best hand will then win\n");
 }
 
+void swap(Card* a, Card* b)
+{
+    Card temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void shuffleDeck()
+{
+
+}
+
+
 /* shuffle cards in deck */
-void shuffle(int wDeck[][FACES])
+void shuffle()
 {
     int row = 0;    /* row number */
     int column = 0; /*column number */
     int card = 0;   /* card counter */
 
     /* for each of the 52 cards, choose slot of deck randomly */
-    for (card = 1; card <= CARDS; card++)
+    for (card = 1; card <= TOTAL_NUMBER_OF_CARDS; card++)
     {
         /* choose new random location until unoccupied slot found */
         do
         {
-            row = rand() % SUITS;
-            column = rand() % FACES;
-        } while (wDeck[row][column] != 0);
+            row = rand() % TOTAL_NUMBER_OF_SUITS;
+            column = rand() % TOTAL_NUMBER_OF_FACES;
+        } while (g_deckMultidimensionalArray[row][column] != 0);
 
         /* place card number in chosen slot of deck */
-        wDeck[row][column] = card;
+        g_deckMultidimensionalArray[row][column] = card;
     }
 }
 
-int card = 0;
-void dealOneCard(const int wDeck[][FACES], const char* wFace[], const char* wSuit[], Hand hand, int indexToReplace)
+int g_card = 0;
+void dealOneCard(Hand hand, int indexToReplace)
 {
     //int card = *cardPointer;
     int row = 0;    /* row number */
     int column = 0; /*column number */
     /* loop through rows of wDeck */
-    for (row = 0; row < SUITS; row++)
+    for (row = 0; row < TOTAL_NUMBER_OF_SUITS; row++)
     {
         /* loop through columns of wDeck for current row */
-        for (column = 0; column < FACES; column++)
+        for (column = 0; column < TOTAL_NUMBER_OF_FACES; column++)
         {
-            if (wDeck[row][column] == card)
+            if (g_deckMultidimensionalArray[row][column] == g_card)
             {
                 hand.player_hand[indexToReplace].face_index = column;
                 hand.player_hand[indexToReplace].suit_index = row;
             }
         }
     }
-    card++;
+    g_card++;
     //*cardPointer = card;
 }
 
 int getCardValue()
 {
-    return card;
+    return g_card;
 }
 
 
 /* deal cards in deck */
-void deal(const int wDeck[][FACES], const char* wFace[], const char* wSuit[], Hand p1_hand, Hand dealer_hand)
+void deal(Hand p1_hand, Hand dealer_hand)
 {
     int row = 0;    /* row number */
     int column = 0; /*column number */
@@ -103,23 +121,23 @@ void deal(const int wDeck[][FACES], const char* wFace[], const char* wSuit[], Ha
     int cards_dealer = 0; //number of cards dealt dealer counter to keep track in array
 
     /* deals 2 hands worth of 5 cards each (5*2=10) */
-    for (card = 1; card <= 10; card++)
+    for (g_card = 1; g_card <= 10; g_card++)
     {
         /* loop through rows of wDeck */
-        for (row = 0; row < SUITS; row++)
+        for (row = 0; row < TOTAL_NUMBER_OF_SUITS; row++)
         {
             /* loop through columns of wDeck for current row */
-            for (column = 0; column < FACES; column++)
+            for (column = 0; column < TOTAL_NUMBER_OF_FACES; column++)
             {
                 /* if slot contains current card, deal card */
-                if (wDeck[row][column] == card && card <= 5)
+                if (g_deckMultidimensionalArray[row][column] == g_card && g_card <= NUMBER_OF_CARDS_IN_HAND)
                 {
-                    p1_hand.player_hand[card].face_index = column;
-                    p1_hand.player_hand[card].suit_index = row;
-                    printf("Card: %d: %5s of %-8s\n", card, wFace[column], wSuit[row]);
+                    p1_hand.player_hand[g_card].face_index = column;
+                    p1_hand.player_hand[g_card].suit_index = row;
+                    printf("Card: %d: %5s of %-8s\n", g_card, g_face[column], g_suit[row]);
                     /*printf("%5s of %-8s%c", wFace[column], wSuit[row], card % 2 == 0 ? '\n' : '\t'); //print every card in deck if initialized properly with loops*/
                 }
-                else if (wDeck[row][column] == card && card > 5)
+                else if (g_deckMultidimensionalArray[row][column] == g_card && g_card > NUMBER_OF_CARDS_IN_HAND)
                 {
                     dealer_hand.player_hand[cards_dealer].face_index = column;
                     dealer_hand.player_hand[cards_dealer].suit_index = row;
@@ -134,9 +152,9 @@ bool check_pair(Hand hand)
 {
     bool is_pair = false;
     int card = 0, card2 = 0; //pair =0
-    for (card = 0; card < 5; card++)
+    for (card = 0; card < NUMBER_OF_CARDS_IN_HAND; card++)
     {
-        for (card2 = 0; card2 < 5 && card2 != card; card2++)
+        for (card2 = 0; card2 < NUMBER_OF_CARDS_IN_HAND && card2 != card; card2++)
         {
             if (hand.player_hand[card].face_index == hand.player_hand[card2].face_index)
             {
@@ -152,9 +170,9 @@ bool checkTwoPairs(Hand hand, Card excludeCards[])
     bool is_pair = false, is_pair2 = false;
     int card = 0, card2 = 0, savecardpair1 = 0; //pair =0
 
-    for (card = 0; card < 5; card++)
+    for (card = 0; card < NUMBER_OF_CARDS_IN_HAND; card++)
     {
-        for (card2 = 0; card2 < 5 && card2 != card; card2++)
+        for (card2 = 0; card2 < NUMBER_OF_CARDS_IN_HAND && card2 != card; card2++)
         {
             if (hand.player_hand[card].face_index == hand.player_hand[card2].face_index &&
                 hand.player_hand[savecardpair1].face_index != hand.player_hand[card].face_index)
@@ -195,23 +213,23 @@ int getMaxElementInArray(int array[], int arraySize)
 int getMaxNumberSameCard(Hand hand, int* cardCountArrayToScoreHand[])
 {
     /*printf("%d,%d,%d", indexForRejectedCards[0], indexForRejectedCards[1], indexForRejectedCards[2]);*/
-    int cardCount[13] = { 0 };
+    int cardCount[TOTAL_NUMBER_OF_FACES] = { 0 };
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < NUMBER_OF_CARDS_IN_HAND; i++)
     {
         cardCount[hand.player_hand[i].face_index]++;
     }
-    for (int k = 0; k < 13; k++)
+    for (int k = 0; k < TOTAL_NUMBER_OF_FACES; k++)
     {
         cardCountArrayToScoreHand[k] = cardCount[k];
     }
-    return getMaxElementInArray(cardCount, 13);
+    return getMaxElementInArray(cardCount, TOTAL_NUMBER_OF_FACES);
 }
 
 //TODO: check address for indexForRejectedCards in lines 160 and 179
 int scoreHand(Hand hand)
 {
-    int cardCount[13];
+    int cardCount[TOTAL_NUMBER_OF_FACES];
     int maxSameCard = getMaxNumberSameCard(hand, cardCount);
     int score;
     switch (maxSameCard)
@@ -263,8 +281,8 @@ int scoreHand(Hand hand)
 
 bool checkStraight(Hand hand)
 {
-    bubble_sort(&hand, 5);
-    for (int i = 1; i < 5; i++)
+    bubble_sort(&hand, NUMBER_OF_CARDS_IN_HAND);
+    for (int i = 1; i < NUMBER_OF_CARDS_IN_HAND; i++)
     {
         if (hand.player_hand[i].face_index - 1 != hand.player_hand[i - 1].face_index)
         {
@@ -276,7 +294,7 @@ bool checkStraight(Hand hand)
 
 bool checkFlush(Hand hand)
 {
-    for (int i = 1; i < 5; i++)
+    for (int i = 1; i < NUMBER_OF_CARDS_IN_HAND; i++)
     {
         if (hand.player_hand[i].suit_index != hand.player_hand[i - 1].suit_index)
         {
@@ -308,7 +326,7 @@ void bubble_sort(Hand* hand, int num_items)
 bool checkTwoPair(int cardCount[])
 {
     int numberOfPairs = 0;
-    for (int i = 0; i < 13; i++)
+    for (int i = 0; i < TOTAL_NUMBER_OF_FACES; i++)
     {
         if (cardCount[i] >= 2)
         {

@@ -23,11 +23,11 @@ int main(void)
     const char* suit[4] = { "Hearts", "Diamonds", "Clubs", "Spades" };
 
     /* initialize face array */
-    const char* face[13] = { "Ace", "Deuce", "Three", "Four", "Five", "Six", "Seven", "Eight",
+    const char* face[TOTAL_NUMBER_OF_FACES] = { "Ace", "Deuce", "Three", "Four", "Five", "Six", "Seven", "Eight",
         "Nine", "Ten", "Jack", "Queen", "King" };
 
     /* initalize deck array */
-    int deck[4][13] = { 0 };
+    int deck[4][TOTAL_NUMBER_OF_FACES] = { 0 };
 
 
     Hand p1_hand = { 0 }; // - to initialize
@@ -47,7 +47,7 @@ int main(void)
             break;
         case 2:
             system("cls");
-            game_controller(deck,face,suit,p1_hand,dealer_hand);
+            game_controller(p1_hand,dealer_hand);
             break;
         case 3:
             break;

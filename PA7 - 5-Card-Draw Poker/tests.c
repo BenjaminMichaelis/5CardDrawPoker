@@ -8,17 +8,17 @@ void Test_deal()
     const char* suit[4] = { "Hearts", "Diamonds", "Clubs", "Spades" };
 
     /* initialize face array */
-    const char* face[13] = { "Ace", "Deuce", "Three", "Four", "Five", "Six", "Seven", "Eight",
+    const char* face[TOTAL_NUMBER_OF_FACES] = { "Ace", "Deuce", "Three", "Four", "Five", "Six", "Seven", "Eight",
         "Nine", "Ten", "Jack", "Queen", "King" };
 
     /* initalize deck array */
-    int deck[4][13] = { 0 };
+    int deck[4][TOTAL_NUMBER_OF_FACES] = { 0 };
     /* card counter */
     int card = 0;
     Hand p1_hand = { 0 }; // - to initialize
     Hand dealer_hand = { 0 };
 
-    deal(deck, face, suit, p1_hand, dealer_hand);
+    deal(p1_hand, dealer_hand);
     card = getCardValue();
     AreIntEqual(11, card, "1. deal did not return expected value");
     printf("%d\n", getCardValue());
@@ -29,50 +29,50 @@ void Test_dealOneCard()
     const char* suit[4] = { "Hearts", "Diamonds", "Clubs", "Spades" };
 
     /* initialize face array */
-    const char* face[13] = { "Ace", "Deuce", "Three", "Four", "Five", "Six", "Seven", "Eight",
+    const char* face[TOTAL_NUMBER_OF_FACES] = { "Ace", "Deuce", "Three", "Four", "Five", "Six", "Seven", "Eight",
         "Nine", "Ten", "Jack", "Queen", "King" };
 
     /* initalize deck array */
-    int deck[4][13] = { 0 };
+    int deck[4][TOTAL_NUMBER_OF_FACES] = { 0 };
     int card = 11;   /* card counter */
 
     Hand p1_hand = { 0 }; // - to initialize
 
 
-    dealOneCard(deck, face, suit, p1_hand, 3);
+    dealOneCard(p1_hand, 3);
     card = getCardValue();
     AreIntEqual(12, card, "1. dealOneCard did not return expected value");
     p1_hand.player_hand[3].face_index = 3;
-    dealOneCard(deck, face, suit, p1_hand, 3);
+    dealOneCard(p1_hand, 3);
     card = getCardValue();
     AreIntNotEqual(3, p1_hand.player_hand[3].face_index, "2. dealOneCard did not return expected value");
-    AreIntEqual(13, card, "3. dealOneCard did not return expected value");
+    AreIntEqual(TOTAL_NUMBER_OF_FACES, card, "3. dealOneCard did not return expected value");
 
 }
 
 void Test_getMaxNumberSameCard()
 {
     Hand testHand = { 0 };
-    int actualCountCards[13] = { 0 };
+    int actualCountCards[TOTAL_NUMBER_OF_FACES] = { 0 };
     
     int faceIndices[] = { 0,12,12,3,12 };
-    setHand(&testHand, faceIndices, 5);
+    setHand(&testHand, faceIndices, NUMBER_OF_CARDS_IN_HAND);
 
-    resetArray(actualCountCards, 13);
+    resetArray(actualCountCards, TOTAL_NUMBER_OF_FACES);
     AreIntEqual(3, getMaxNumberSameCard(testHand, actualCountCards), "1. getMaxNumberSameCard did not return expected value");
-    AreArraysEqual((int[]){ 1,0,0,1,0,0,0,0,0,0,0,0,3 }, actualCountCards, "4. getMaxNumberSameCard did not return expected value", 13);
+    AreArraysEqual((int[]){ 1,0,0,1,0,0,0,0,0,0,0,0,3 }, actualCountCards, "4. getMaxNumberSameCard did not return expected value", TOTAL_NUMBER_OF_FACES);
 
     // {0, 12, 12, 0, 12 };
     testHand.player_hand[3].face_index = 0;
-    resetArray(actualCountCards, 13);
+    resetArray(actualCountCards, TOTAL_NUMBER_OF_FACES);
     AreIntEqual(3, getMaxNumberSameCard(testHand, actualCountCards), "2. getMaxNumberSameCard did not return expected value");
-    AreArraysEqual((int[]) { 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3 }, actualCountCards, "5. getMaxNumberSameCard did not return expected value", 13);
+    AreArraysEqual((int[]) { 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3 }, actualCountCards, "5. getMaxNumberSameCard did not return expected value", TOTAL_NUMBER_OF_FACES);
 
     // {0, 12, 4, 0, 12 };
     testHand.player_hand[2].face_index = 4;
-    resetArray(actualCountCards, 13);
+    resetArray(actualCountCards, TOTAL_NUMBER_OF_FACES);
     AreIntEqual(2, getMaxNumberSameCard(testHand, actualCountCards), "3. getMaxNumberSameCard did not return expected value");
-    AreArraysEqual((int[]) { 2,0,0,0,1,0,0,0,0,0,0,0,2 }, actualCountCards, "6. getMaxNumberSameCard did not return expected value", 13);
+    AreArraysEqual((int[]) { 2,0,0,0,1,0,0,0,0,0,0,0,2 }, actualCountCards, "6. getMaxNumberSameCard did not return expected value", TOTAL_NUMBER_OF_FACES);
 }
 
 void setHand(Hand* pHand, int values[], int length)
@@ -96,7 +96,6 @@ void Test_scoreHand()
 {
     int score;
     Hand testhand = { 0 };
-    int indexForRejectedCards1[3] = { 5,6,8 };
     testhand.player_hand[0].face_index = 0;
     testhand.player_hand[1].face_index = 12;
     testhand.player_hand[2].face_index = 12;
@@ -193,7 +192,7 @@ void Test_checkStraight()
     testhand.player_hand[4].face_index = 12;
     IsTrue(!checkStraight(testhand), "checkStraight Unexpectedly returned true");
 
-    int i = 5;
+    int i = NUMBER_OF_CARDS_IN_HAND;
     testhand.player_hand[0].face_index = i++;
     testhand.player_hand[1].face_index = i++;
     testhand.player_hand[2].face_index = i++;

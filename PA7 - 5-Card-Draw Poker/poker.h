@@ -4,9 +4,10 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#define SUITS 4
-#define FACES 13
-#define CARDS 52
+#define TOTAL_NUMBER_OF_SUITS 4
+#define TOTAL_NUMBER_OF_FACES 13
+#define TOTAL_NUMBER_OF_CARDS (TOTAL_NUMBER_OF_FACES*TOTAL_NUMBER_OF_SUITS)
+#define NUMBER_OF_CARDS_IN_HAND 5
 
 #include <stdio.h>
 #include <math.h>
@@ -27,18 +28,19 @@ typedef struct card
 
 typedef struct hand
 {
-    Card player_hand[5];
+    Card player_hand[NUMBER_OF_CARDS_IN_HAND];
 
 } Hand;
 
 int runmenu();
 int getint();
 void displayrules();
-void shuffle(int wDeck[][FACES]);
-void dealOneCard(const int wDeck[][FACES], const char* wFace[], const char* wSuit[], Hand hand, int indexToReplace);
+void swap(Card* a, Card* b);
+void shuffle(int wDeck[][TOTAL_NUMBER_OF_FACES]);
+void dealOneCard(Hand hand, int indexToReplace);
 int getCardValue();
-void deal(const int wDeck[][FACES], const char* wFace[], const char* wSuit[], Hand p1_hand, Hand dealer_hand);
-void game_controller(const int deck[][FACES], const char* face[], const char* suit[], Hand p1_hand, Hand dealer_hand);
+void deal(Hand p1_hand, Hand dealer_hand);
+void game_controller(Hand p1_hand, Hand dealer_hand);
 bool check_pair(Hand hand);
 //bool checkTwoPairs(Hand hand, Card excludeCards);
 int scoreHand(Hand hand);
