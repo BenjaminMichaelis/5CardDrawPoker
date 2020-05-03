@@ -1,34 +1,16 @@
 // Authors: Deitel & Deitel - C How to Program
+//include resources/help from: Stackoverflow.com, Mark Michaelis
+//This is PA7 - 5 Card Draw Poker - rules are from wikipedia,
+//code started with starter code from Deitel & Deitel
 
 #include "poker.h"
 #include "tests.h"
 
 int main(void)
 {
-    Test_deal();
-    Test_dealOneCard();
-    Test_scoreHand();
-
-    //getMaxNumberSameCard(p1_hand1, indexForRejectedCards1);
-    Test_getMaxElementInArray();
-
-    Test_getMaxNumberSameCard();
-
-    Test_checkStraight();
-
-    //return 0;
+    runAllTests();
 
     int menuoption = -1;
-    /* initialize suit array */
-    const char* suit[4] = { "Hearts", "Diamonds", "Clubs", "Spades" };
-
-    /* initialize face array */
-    const char* face[TOTAL_NUMBER_OF_FACES] = { "Ace", "Deuce", "Three", "Four", "Five", "Six", "Seven", "Eight",
-        "Nine", "Ten", "Jack", "Queen", "King" };
-
-    /* initalize deck array */
-    int deck[4][TOTAL_NUMBER_OF_FACES] = { 0 };
-
 
     Hand p1_hand = { 0 }; // - to initialize
     //p1_hand.player_hand[0]; // to access specific card modify index inside array (face or suit index) [][]

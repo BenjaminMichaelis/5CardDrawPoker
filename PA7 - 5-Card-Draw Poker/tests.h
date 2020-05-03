@@ -12,12 +12,18 @@ void AreIntEqual(int expected, int actual, const char*  message);
 
 void AreIntNotEqual(int expected, int actual, const char* message);
 
-void IsTrue(bool actual, const char* message);
+void AssertIsTrue(bool actual, const char* message);
 
 void Test_checkStraight();
 
 
-void print(const char* message);
+void printTestFailed(const char* message);
+
+void runAllTests();
+
+void Test_shuffleDeck();
+
+bool allItemsAreUniqueAndShuffled(Card * pDeck, int length);
 
 void Test_deal();
 

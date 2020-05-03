@@ -1,66 +1,116 @@
 #include "tests.h"
 #include "poker.h"
 
+void runAllTests()
+{
+    Test_shuffleDeck();
+    Test_deal();
+    Test_scoreHand();
+    Test_getMaxElementInArray();
+    Test_getMaxNumberSameCard();
+    Test_checkStraight();
+}
+
+
+void Test_shuffleDeck()
+{
+    Card deck[TOTAL_NUMBER_OF_CARDS] = { 0 };
+    bool success;
+    // If (by some miracle) they aren't shuffled, try again
+    for (int i = 0; i < 4; i++)
+    {
+        shuffleDeck();
+        for (int eachCardInDeck = 0; eachCardInDeck < TOTAL_NUMBER_OF_CARDS; eachCardInDeck++)
+        {
+            deck[eachCardInDeck] = pullNextCardFromDeck();
+        }
+        if (success = allItemsAreUniqueAndShuffled(deck, TOTAL_NUMBER_OF_CARDS))
+        {
+            break;
+        }
+    }
+    if (!success)
+    {
+        printTestFailed("Unable to successfully shuffle the cards.");
+    }
+}
+
+
 
 void Test_deal()
 {
-    printf("%d\n", getCardValue());
-    const char* suit[4] = { "Hearts", "Diamonds", "Clubs", "Spades" };
+    bool success = false;
+    shuffleDeck();
+    Hand player1Hand = { 0 };
+    Hand dealerHand = { 0 };
 
-    /* initialize face array */
-    const char* face[TOTAL_NUMBER_OF_FACES] = { "Ace", "Deuce", "Three", "Four", "Five", "Six", "Seven", "Eight",
-        "Nine", "Ten", "Jack", "Queen", "King" };
-
-    /* initalize deck array */
-    int deck[4][TOTAL_NUMBER_OF_FACES] = { 0 };
-    /* card counter */
-    int card = 0;
-    Hand p1_hand = { 0 }; // - to initialize
-    Hand dealer_hand = { 0 };
-
-    deal(p1_hand, dealer_hand);
-    card = getCardValue();
-    AreIntEqual(11, card, "1. deal did not return expected value");
-    printf("%d\n", getCardValue());
+    // If (by some miracle) they aren't shuffled, try again
+    for (int i = 0; i < 4; i++)
+    {
+        deal(&player1Hand, &dealerHand);
+        if (success = (allItemsAreUniqueAndShuffled(player1Hand.player_hand, NUMBER_OF_CARDS_IN_HAND)
+            && allItemsAreUniqueAndShuffled(dealerHand.player_hand, NUMBER_OF_CARDS_IN_HAND)))
+        {
+            break;
+        }
+    }
+    if (!success)
+    {
+        printTestFailed("Unable to successsfully deal cards.");
+    }
 }
 
-void Test_dealOneCard()
+bool allItemsAreUniqueAndShuffled(Card* pDeck, int length)
 {
-    const char* suit[4] = { "Hearts", "Diamonds", "Clubs", "Spades" };
+    bool duplicateItemExists = false;
+    int countFaceCardChangeByMoreThan1 = 0;
+    int countSuitChanged = 0;
+    int lastSuit = 0;
+    int lastFaceCard = 0;
+    char duplicateCardsMessage[1024 * 2] = { 0 };
+    sprintf(duplicateCardsMessage, "%s", "There are duplicate items: ");
+    for (int eachCardInDeck = 0; eachCardInDeck < length; eachCardInDeck++)
+    {
+        for (int i = 0; i < eachCardInDeck; i++)
+        {
+            if (i != eachCardInDeck)
+            {
+                if ((pDeck[i].suit_index == pDeck[eachCardInDeck].suit_index)
+                    && (pDeck[i].face_index == pDeck[eachCardInDeck].face_index))
+                {
+                    sprintf(duplicateCardsMessage, "%s[%d][%d], ", duplicateCardsMessage, pDeck[eachCardInDeck].suit_index, pDeck[eachCardInDeck].face_index);
+                    duplicateItemExists = true;
+                    break;
+                }
+            }
+        }
+        if (lastSuit != pDeck[eachCardInDeck].suit_index)
+        {
+            countSuitChanged++;
+        }
+        if (lastFaceCard + 1 != pDeck[eachCardInDeck].face_index
+            && lastFaceCard - 1 != pDeck[eachCardInDeck].face_index)
+        {
+            countFaceCardChangeByMoreThan1++;
+        }
+        lastSuit = pDeck[eachCardInDeck].suit_index;
+        lastFaceCard = pDeck[eachCardInDeck].face_index;
+    }
+    AssertIsTrue(!duplicateItemExists, duplicateCardsMessage);
 
-    /* initialize face array */
-    const char* face[TOTAL_NUMBER_OF_FACES] = { "Ace", "Deuce", "Three", "Four", "Five", "Six", "Seven", "Eight",
-        "Nine", "Ten", "Jack", "Queen", "King" };
-
-    /* initalize deck array */
-    int deck[4][TOTAL_NUMBER_OF_FACES] = { 0 };
-    int card = 11;   /* card counter */
-
-    Hand p1_hand = { 0 }; // - to initialize
-
-
-    dealOneCard(p1_hand, 3);
-    card = getCardValue();
-    AreIntEqual(12, card, "1. dealOneCard did not return expected value");
-    p1_hand.player_hand[3].face_index = 3;
-    dealOneCard(p1_hand, 3);
-    card = getCardValue();
-    AreIntNotEqual(3, p1_hand.player_hand[3].face_index, "2. dealOneCard did not return expected value");
-    AreIntEqual(TOTAL_NUMBER_OF_FACES, card, "3. dealOneCard did not return expected value");
-
+    return (countSuitChanged > length / TOTAL_NUMBER_OF_FACES || countFaceCardChangeByMoreThan1 > length / TOTAL_NUMBER_OF_SUITS);
 }
 
 void Test_getMaxNumberSameCard()
 {
     Hand testHand = { 0 };
     int actualCountCards[TOTAL_NUMBER_OF_FACES] = { 0 };
-    
-    int faceIndices[] = { 0,12,12,3,12 };
-    setHand(&testHand, faceIndices, NUMBER_OF_CARDS_IN_HAND);
+
+    setHand(&testHand, (int[]) { 0, 12, 12, 3, 12 }, NUMBER_OF_CARDS_IN_HAND);
 
     resetArray(actualCountCards, TOTAL_NUMBER_OF_FACES);
     AreIntEqual(3, getMaxNumberSameCard(testHand, actualCountCards), "1. getMaxNumberSameCard did not return expected value");
-    AreArraysEqual((int[]){ 1,0,0,1,0,0,0,0,0,0,0,0,3 }, actualCountCards, "4. getMaxNumberSameCard did not return expected value", TOTAL_NUMBER_OF_FACES);
+    AreArraysEqual((int[]) { 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3 }, actualCountCards, "4. getMaxNumberSameCard did not return expected value", TOTAL_NUMBER_OF_FACES);
 
     // {0, 12, 12, 0, 12 };
     testHand.player_hand[3].face_index = 0;
@@ -72,7 +122,7 @@ void Test_getMaxNumberSameCard()
     testHand.player_hand[2].face_index = 4;
     resetArray(actualCountCards, TOTAL_NUMBER_OF_FACES);
     AreIntEqual(2, getMaxNumberSameCard(testHand, actualCountCards), "3. getMaxNumberSameCard did not return expected value");
-    AreArraysEqual((int[]) { 2,0,0,0,1,0,0,0,0,0,0,0,2 }, actualCountCards, "6. getMaxNumberSameCard did not return expected value", TOTAL_NUMBER_OF_FACES);
+    AreArraysEqual((int[]) { 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2 }, actualCountCards, "6. getMaxNumberSameCard did not return expected value", TOTAL_NUMBER_OF_FACES);
 }
 
 void setHand(Hand* pHand, int values[], int length)
@@ -134,29 +184,41 @@ void Test_getMaxElementInArray()
     AreIntEqual(42, getMaxElementInArray(testarray2, 8), "getMaxElementInArray did not return expected value");
 }
 
-void AreArraysEqual(int expected[], int actual[], const char*  message, int length)
+void AreArraysEqual(int expected[], int actual[], const char* message, int length)
 {
+    char localMessage[1024 * 2];
+    char actualText[1024];
+    char expectedText[1024];
+    bool arraysDiffer = false;
     for (int i = 0; i < length; i++)
     {
-        if (actual[i] != expected[i])
+        if (actual[i] != expected[i] && !arraysDiffer)
         {
-            printf("Index: %d\t", i);
-            printf("Actual: %d\t", actual[i]);
-            printf("Expected: %d\t", expected[i]);
-            // TODO: Append expected and actual to the message to you can read the problem in the output.
-            print(message);
-            printf("\n\n");
+            sprintf(localMessage, "Arrays different starting at index %d: ", i);
+            sprintf(actualText, "%s", "...");
+            sprintf(expectedText, "%s", "...");
+            arraysDiffer = true;
         }
+        if (arraysDiffer)
+        {
+            sprintf(actualText, "%s%d, ", actualText, actual[i]);
+            sprintf(expectedText, "%s%d, ", expectedText, actual[i]);
+        }
+    }
+    if (arraysDiffer)
+    {
+        sprintf(localMessage, "%s{%s} != {%s}", localMessage, expectedText, actualText);
+        printTestFailed(localMessage);
     }
 }
 
 
-void AreIntEqual(int expected, int actual, const char*  message)
+void AreIntEqual(int expected, int actual, const char* message)
 {
     if (actual != expected)
     {
         // TODO: Append expected and actual to the message to you can read the problem in the output.
-        print(message);
+        printTestFailed(message);
         printf("\n");
     };
 }
@@ -165,18 +227,20 @@ void AreIntNotEqual(int expected, int actual, const char* message)
 {
     if (actual == expected)
     {
+        char localMessage[254];
         // TODO: Append expected and actual to the message to you can read the problem in the output.
-        print(message);
-        printf("\n");
+        sprintf(localMessage, "%s (Expected = %d, Actual= %d)", message, expected, actual);
+        printTestFailed(localMessage);
+        //printf("\n");
     };
 }
 
-void IsTrue(bool condition, const char*  message)
+void AssertIsTrue(bool condition, const char* message)
 {
     if (!condition)
     {
         // TODO: Append expected and actual to the message to you can read the problem in the output.
-        print(message);
+        printTestFailed(message);
         printf("\n");
     };
 }
@@ -190,7 +254,7 @@ void Test_checkStraight()
     testhand.player_hand[2].face_index = 12;
     testhand.player_hand[3].face_index = 3;
     testhand.player_hand[4].face_index = 12;
-    IsTrue(!checkStraight(testhand), "checkStraight Unexpectedly returned true");
+    AssertIsTrue(!checkStraight(testhand), "checkStraight Unexpectedly returned true");
 
     int i = NUMBER_OF_CARDS_IN_HAND;
     testhand.player_hand[0].face_index = i++;
@@ -198,17 +262,20 @@ void Test_checkStraight()
     testhand.player_hand[2].face_index = i++;
     testhand.player_hand[3].face_index = i++;
     testhand.player_hand[4].face_index = i++;
-    IsTrue(checkStraight(testhand), "checkStraight Unexpectedly returned true");
-    
+    AssertIsTrue(checkStraight(testhand), "checkStraight Unexpectedly returned true");
+
     testhand.player_hand[0].face_index = 8;
     testhand.player_hand[1].face_index = 5;
     testhand.player_hand[2].face_index = 6;
     testhand.player_hand[3].face_index = 9;
     testhand.player_hand[4].face_index = 7;
-    IsTrue(checkStraight(testhand), "checkStraight Unexpectedly returned true");
+    AssertIsTrue(checkStraight(testhand), "checkStraight Unexpectedly returned true");
 }
 
-void print(const char* message)
+void printTestFailed(const char* message)
 {
-    printf(message);
+    char localMessage[254];
+    // TODO: Append expected and actual to the message to you can read the problem in the output.
+    sprintf(localMessage, "%s%s%s%s", "\033[1;31m", message, "", "\033[0m");
+    printf(localMessage);
 }

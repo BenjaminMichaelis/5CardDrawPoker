@@ -18,8 +18,6 @@
 #include <Bits.h>
 #include <string.h>
 
-
-
 typedef struct card
 {
     int suit_index;
@@ -36,10 +34,14 @@ int runmenu();
 int getint();
 void displayrules();
 void swap(Card* a, Card* b);
+void shuffleDeck();
+#ifdef BENJAMIN
 void shuffle(int wDeck[][TOTAL_NUMBER_OF_FACES]);
 void dealOneCard(Hand hand, int indexToReplace);
 int getCardValue();
-void deal(Hand p1_hand, Hand dealer_hand);
+#endif BENJAMIN
+Card pullNextCardFromDeck();
+void deal(Hand* player1Hand, Hand* dealerHand);
 void game_controller(Hand p1_hand, Hand dealer_hand);
 bool check_pair(Hand hand);
 //bool checkTwoPairs(Hand hand, Card excludeCards);
