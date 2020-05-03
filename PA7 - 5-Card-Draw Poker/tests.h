@@ -8,7 +8,7 @@ void resetArray(int array[], int length);
 
 void Test_scoreHand();
 
-void AreIntEqual(int expected, int actual, const char*  message);
+void AssertIntsAreEqual(int expected, int actual, const char*  message);
 
 void AreIntNotEqual(int expected, int actual, const char* message);
 
@@ -29,5 +29,5 @@ void Test_deal();
 
 void Test_getMaxNumberSameCard();
 
-void AreArraysEqual(int expected[], int actual[], const char* message, int length);
+void AssertArraysAreEqual(int expected[], int actual[], const char* message, int length);
 
