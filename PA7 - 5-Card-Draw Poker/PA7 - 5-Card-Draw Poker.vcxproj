@@ -140,10 +140,9 @@
   <ItemGroup>
     <ClCompile Include="main.c" />
     <ClCompile Include="poker.c" />
-    <ClCompile Include="tests.cpp" />
+    <ClCompile Include="tests.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h" />
     <ClInclude Include="tests.h" />
     <ClInclude Include="poker.h" />
   </ItemGroup>

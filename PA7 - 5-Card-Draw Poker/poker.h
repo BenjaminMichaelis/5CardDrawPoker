@@ -37,27 +37,16 @@ void deal(const int wDeck[][FACES], const char* wFace[], const char* wSuit[], Ha
 void game_controller(const int deck[][FACES], const char* face[], const char* suit[], Hand p1_hand, Hand dealer_hand);
 bool check_pair(Hand hand);
 //bool checkTwoPairs(Hand hand, Card excludeCards);
-int scoreHand(Hand hand, int* indexForRejectedCards[]);
+int scoreHand(Hand hand);
 bool checkStraight(Hand hand);
 void bubble_sort(Hand* hand, int num_items);
-<<<<<<< HEAD
-int getMaxNumberSameCard(Hand hand);
-=======
-int getMaxNumberSameCard(Hand hand, int* indexForRejectedCards[]);
->>>>>>> 305192d... with index to reject cards, before evaluation of hand
-
 
 enum ScoreValue { ScoreValueThreeOfAKind = 7, ScoreValuePair = 9};
 
 //int getSizeIntOfArray(int array[]);
 
 int getMaxElementInArray(int array[], int arraySize);
-
-<<<<<<< HEAD
 int getMaxNumberSameCard(Hand hand, int* cardCountArrayToScoreHand);
-=======
-int getMaxNumberSameCard(Hand hand, int* indexForRejectedCards, int* cardCountArrayToScoreHand);
->>>>>>> 305192d... with index to reject cards, before evaluation of hand
 
 //int scoreHand(int maxSameCard, int* indexForRejectedCards[]);
 
