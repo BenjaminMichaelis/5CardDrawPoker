@@ -297,11 +297,10 @@ int getMaxNumberSameCard(Hand hand, int* cardCountArrayToScoreHand[])
 }
 
 //TODO: check address for indexForRejectedCards in lines 160 and 179
-int scoreHand(Hand hand, int* cardCountArrayToScoreHand[])
+int scoreHand(Hand hand, int* cardCount[])
 {
-    int cardCount[TOTAL_NUMBER_OF_FACES] = { 0 };
 
-    int maxSameCard = getMaxNumberSameCard(hand, &cardCount);
+    int maxSameCard = getMaxNumberSameCard(hand, cardCount);
     int score;
     switch (maxSameCard)
     {
@@ -445,17 +444,18 @@ void allowPlayerReplaceCards(Hand* pPlayer1Hand)
     printf("Do you want to replace a card? Y or N");
     charinput = getchar();
     scanf("%c", &charinput);
-    if (charinput == "Y" || charinput == "y")
+    if (charinput == 'Y' || charinput == 'y')
     {
-        for (int i = 0; i < 5 && (charinput == "Y" || charinput == "y"); i++)
+        for (int i = 0; i < 5 && (charinput == 'Y' || charinput == 'y'); i++)
         {
             do
             {
-                printf("What card number do you want to replace?");
+                printf("What card number do you want to replace?\n");
                 replaceCard = getint();
             } while (replaceCard > 4 || replaceCard < 0);
             pPlayer1Hand->player_hand[replaceCard] = pullNextCardFromDeck();
-            printf("Do you want to replace another card? Y or N");
+            printf("Do you want to replace another card (Y or N)?\n");
+            getchar();
             charinput = getchar();
         }
     }
@@ -509,7 +509,7 @@ void bubble_sort(Hand* hand, int num_items)
     }
 }
 
-bool checkTwoPair(int cardCount[])
+bool checkTwoPair(int * cardCount[])
 {
     int numberOfPairs = 0;
     for (int i = 0; i < TOTAL_NUMBER_OF_FACES; i++)

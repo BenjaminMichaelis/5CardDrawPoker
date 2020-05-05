@@ -51,7 +51,7 @@ void allowPlayerReplaceCards(Hand* pPlayer1Hand);
 bool checkStraight(Hand hand);
 bool checkFlush(Hand hand);
 void bubble_sort(Hand* hand, int num_items);
-bool checkTwoPair(int cardCount[]);
+bool checkTwoPair(int * cardCount[]);
 enum ScoreValue { ScoreValueThreeOfAKind = 7, ScoreValuePair = 9, ScoreValueTwoPair = 8, ScoreValueStraight = 6, ScoreValueFlush = 5, ScoreValueFourOfAKind = 3};
 
 //int getSizeIntOfArray(int array[]);
