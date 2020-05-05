@@ -35,22 +35,24 @@ int getint();
 void displayrules();
 void swap(Card* a, Card* b);
 void shuffleDeck();
-#ifdef BENJAMIN
+#ifdef OldCode
 void shuffle(int wDeck[][TOTAL_NUMBER_OF_FACES]);
 void dealOneCard(Hand hand, int indexToReplace);
 int getCardValue();
-#endif BENJAMIN
+#endif OldCode
 Card pullNextCardFromDeck();
 void deal(Hand* player1Hand, Hand* dealerHand);
 void game_controller(Hand p1_hand, Hand dealer_hand);
 bool check_pair(Hand hand);
 //bool checkTwoPairs(Hand hand, Card excludeCards);
-int scoreHand(Hand hand);
+int scoreHand(Hand hand, int* cardCountArrayToScoreHand[]);
+void evaluateAndChangeDealersHand(Hand* pPlayer2Hand);
+void allowPlayerReplaceCards(Hand* pPlayer1Hand);
 bool checkStraight(Hand hand);
 bool checkFlush(Hand hand);
 void bubble_sort(Hand* hand, int num_items);
 bool checkTwoPair(int cardCount[]);
-enum ScoreValue { ScoreValueThreeOfAKind = 7, ScoreValuePair = 9, ScoreValueTwoPair = 8, ScoreValueStraight = 6, ScoreValueFlush = 5};
+enum ScoreValue { ScoreValueThreeOfAKind = 7, ScoreValuePair = 9, ScoreValueTwoPair = 8, ScoreValueStraight = 6, ScoreValueFlush = 5, ScoreValueFourOfAKind = 3};
 
 //int getSizeIntOfArray(int array[]);
 

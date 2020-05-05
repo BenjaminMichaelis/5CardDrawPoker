@@ -146,18 +146,20 @@ void Test_scoreHand()
 {
     int score;
     Hand testhand = { 0 };
+    int cardCount[TOTAL_NUMBER_OF_FACES] = { 0 };
+
     testhand.player_hand[0].face_index = 0;
     testhand.player_hand[1].face_index = 12;
     testhand.player_hand[2].face_index = 12;
     testhand.player_hand[3].face_index = 3;
     testhand.player_hand[4].face_index = 12;
-    score = scoreHand(testhand);
+    score = scoreHand(testhand, cardCount);
     AssertIntsAreEqual(ScoreValueThreeOfAKind, score, "1. Returned score was unexpected");
     testhand.player_hand[4].face_index = 9;
-    score = scoreHand(testhand);
+    score = scoreHand(testhand, cardCount);
     AssertIntsAreEqual(ScoreValuePair, score, "2. Returned score was unexpected");
     testhand.player_hand[4].face_index = 3;
-    score = scoreHand(testhand);
+    score = scoreHand(testhand, cardCount);
     AssertIntsAreEqual(ScoreValueTwoPair, score, "3. Returned score was unexpected");
     testhand.player_hand[0].face_index = 0;
     testhand.player_hand[1].face_index = 1;
@@ -169,10 +171,10 @@ void Test_scoreHand()
     testhand.player_hand[2].suit_index = 1;
     testhand.player_hand[3].suit_index = 1;
     testhand.player_hand[4].suit_index = 1;
-    score = scoreHand(testhand);
+    score = scoreHand(testhand, cardCount);
     AssertIntsAreEqual(ScoreValueFlush, score, "4. Returned score was unexpected");
     testhand.player_hand[3].suit_index = 2;
-    score = scoreHand(testhand);
+    score = scoreHand(testhand, cardCount);
     AssertIntsAreEqual(ScoreValueStraight, score, "5. Returned score was unexpected");
 }
 

@@ -12,13 +12,31 @@ int g_deckMultidimensionalArray[4][TOTAL_NUMBER_OF_FACES] = { 0 };
 
 Card g_deck[TOTAL_NUMBER_OF_CARDS] = { 0 };
 
+//int cardCount[TOTAL_NUMBER_OF_FACES] = { 0 };
+
 void game_controller(Hand player1Hand, Hand dealerHand)
 {
+    int cardCount[TOTAL_NUMBER_OF_FACES] = { 0 };
+    int scorep1;
+    int scorep2;
     shuffleDeck();
     deal(&player1Hand, &dealerHand);
     //p1pair = check_pair(p1_hand);
     //p12pairs = checkTwoPairs(p1_hand);
-    scoreHand(player1Hand);
+    //evaluateAndChangeDealersHand(&dealerHand);
+    allowPlayerReplaceCards(&player1Hand);
+    scorep1 = scoreHand(player1Hand, &cardCount);
+    scorep2 = scoreHand(dealerHand, &cardCount);
+    if (scorep1 > scorep2)
+    {
+        printf("\nYou won the game!!\n");
+    }
+    if (scorep2 > scorep1)
+    {
+        printf("\nThe computer won the game!!\n");
+    }
+    //printf("")
+
 }
 
 
@@ -40,6 +58,13 @@ int getint()
     int number;
     scanf("%d", &number);
     return number;
+}
+
+char getChar()
+{
+    char character;
+    scanf("%c", &character);
+    return character;
 }
 
 void displayrules()
@@ -103,7 +128,7 @@ void deal(Hand* pPlayer1Hand, Hand* pPlayer2Hand)
 }
 
 
-#ifdef BENJAMIN
+#ifdef OldCode
 /* shuffle cards in deck */
 void shuffle()
 {
@@ -190,7 +215,7 @@ void deal(Hand p1_hand, Hand dealer_hand)
         }
     }
 }
-#endif BENJAMIN
+#endif OldCode
 
 
 bool check_pair(Hand hand)
@@ -272,15 +297,16 @@ int getMaxNumberSameCard(Hand hand, int* cardCountArrayToScoreHand[])
 }
 
 //TODO: check address for indexForRejectedCards in lines 160 and 179
-int scoreHand(Hand hand)
+int scoreHand(Hand hand, int* cardCountArrayToScoreHand[])
 {
-    int cardCount[TOTAL_NUMBER_OF_FACES];
-    int maxSameCard = getMaxNumberSameCard(hand, cardCount);
+    int cardCount[TOTAL_NUMBER_OF_FACES] = { 0 };
+
+    int maxSameCard = getMaxNumberSameCard(hand, &cardCount);
     int score;
     switch (maxSameCard)
     {
-    case 4: // four of a kind
-        score = 3;
+    case 4:  //four of a kind
+        score = ScoreValueFourOfAKind;
         break;
     case 3: //three of a kind
         score = ScoreValueThreeOfAKind;
@@ -322,7 +348,122 @@ int scoreHand(Hand hand)
 
     return score;
 }
+/*
+void evaluateAndChangeDealersHand(Hand* pPlayer2Hand)
+{
+    int score = scoreHand(*pPlayer2Hand);
+    int index = -1, index2 = -1, tracker = 0;
+    if (score == ScoreValueFourOfAKind)
+    {
+        return;
+    }
+    else if (score == ScoreValueFlush)
+    {
+        return;
+    }
+    else if (score == ScoreValueStraight)
+    {
+        return;
+    }
+    else if (score == ScoreValueThreeOfAKind)
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            if (cardCount[i] == 3)
+            {
+                index = i;
+                break;
+            }
+        }
+        for (int j = 0; j < 5; j++)
+        {
+            if (pPlayer2Hand->player_hand[j].face_index != index)
+            {
+                pPlayer2Hand->player_hand[j] = pullNextCardFromDeck();
+            }
+        }
+    }
+    else if (score == ScoreValueTwoPair)
+    {
+            for (int i = 0; i < 5; i++)
+            {
+                if (cardCount[i] == 2)
+                {
+                    if (tracker == 0)
+                    {
+                        index = i;
+                    }
+                    else if (tracker == 1)
+                    {
+                        index2 = i;
+                    }
+                    tracker++;
+                }
+            }
 
+        for (int j = 0; j < 5; j++)
+        {
+            if (pPlayer2Hand->player_hand[j].face_index != index || pPlayer2Hand->player_hand[j].face_index != index2)
+            {
+                pPlayer2Hand->player_hand[j] = pullNextCardFromDeck();
+            }
+        }
+    }
+    else if (score == ScoreValuePair)
+    {
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (cardCount[i] == 2)
+                {
+                    index = i;
+                    break;
+                }
+            }
+            for (int j = 0; j < 5; j++)
+            {
+                if (pPlayer2Hand->player_hand[j].face_index != index)
+                {
+                    pPlayer2Hand->player_hand[j] = pullNextCardFromDeck();
+                }
+            }
+        }
+    }
+}
+*/
+void allowPlayerReplaceCards(Hand* pPlayer1Hand)
+{
+    int numberCardsYouHaveReplaced = 0;
+    char charinput;
+    int replaceCard, column, row;
+    for (int j = 0; j < 5; j++)
+    {
+        column = pPlayer1Hand->player_hand[j].face_index;
+        row = pPlayer1Hand->player_hand[j].suit_index;
+        printf("Card: %d: %5s of %-8s\n", j, g_face[column], g_suit[row]);
+    }
+    printf("Do you want to replace a card? Y or N");
+    charinput = getchar();
+    scanf("%c", &charinput);
+    if (charinput == "Y" || charinput == "y")
+    {
+        for (int i = 0; i < 5 && (charinput == "Y" || charinput == "y"); i++)
+        {
+            do
+            {
+                printf("What card number do you want to replace?");
+                replaceCard = getint();
+            } while (replaceCard > 4 || replaceCard < 0);
+            pPlayer1Hand->player_hand[replaceCard] = pullNextCardFromDeck();
+            printf("Do you want to replace another card? Y or N");
+            charinput = getchar();
+        }
+    }
+    else
+    {
+        return;
+    }
+}
 
 bool checkStraight(Hand hand)
 {
