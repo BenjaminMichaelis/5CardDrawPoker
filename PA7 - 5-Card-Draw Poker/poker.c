@@ -23,7 +23,7 @@ void game_controller(Hand player1Hand, Hand dealerHand)
     deal(&player1Hand, &dealerHand);
     //p1pair = check_pair(p1_hand);
     //p12pairs = checkTwoPairs(p1_hand);
-    //evaluateAndChangeDealersHand(&dealerHand);
+    evaluateAndChangeDealersHand(&dealerHand, &cardCount);
     allowPlayerReplaceCards(&player1Hand);
     scorep1 = scoreHand(player1Hand, &cardCount);
     scorep2 = scoreHand(dealerHand, &cardCount);
@@ -34,6 +34,10 @@ void game_controller(Hand player1Hand, Hand dealerHand)
     if (scorep2 > scorep1)
     {
         printf("\nThe computer won the game!!\n");
+    }
+    if (scorep1 == scorep2)
+    {
+        printf("\nYou have tied!!\n");
     }
     //printf("")
 
@@ -347,10 +351,10 @@ int scoreHand(Hand hand, int* cardCount[])
 
     return score;
 }
-/*
-void evaluateAndChangeDealersHand(Hand* pPlayer2Hand)
+
+void evaluateAndChangeDealersHand(Hand* pPlayer2Hand, int* cardCount)
 {
-    int score = scoreHand(*pPlayer2Hand);
+    int score = scoreHand(*pPlayer2Hand, cardCount);
     int index = -1, index2 = -1, tracker = 0;
     if (score == ScoreValueFourOfAKind)
     {
@@ -429,7 +433,7 @@ void evaluateAndChangeDealersHand(Hand* pPlayer2Hand)
         }
     }
 }
-*/
+
 void allowPlayerReplaceCards(Hand* pPlayer1Hand)
 {
     int numberCardsYouHaveReplaced = 0;
@@ -441,7 +445,7 @@ void allowPlayerReplaceCards(Hand* pPlayer1Hand)
         row = pPlayer1Hand->player_hand[j].suit_index;
         printf("Card: %d: %5s of %-8s\n", j, g_face[column], g_suit[row]);
     }
-    printf("Do you want to replace a card? Y or N");
+    printf("Do you want to replace a card (Y or N)?\n");
     charinput = getchar();
     scanf("%c", &charinput);
     if (charinput == 'Y' || charinput == 'y')

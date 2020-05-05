@@ -46,7 +46,7 @@ void game_controller(Hand p1_hand, Hand dealer_hand);
 bool check_pair(Hand hand);
 //bool checkTwoPairs(Hand hand, Card excludeCards);
 int scoreHand(Hand hand, int* cardCountArrayToScoreHand[]);
-void evaluateAndChangeDealersHand(Hand* pPlayer2Hand);
+void evaluateAndChangeDealersHand(Hand* pPlayer2Hand, int* cardCountArray);
 void allowPlayerReplaceCards(Hand* pPlayer1Hand);
 bool checkStraight(Hand hand);
 bool checkFlush(Hand hand);
