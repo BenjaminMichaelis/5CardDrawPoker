@@ -1,7 +1,6 @@
-// Authors: Deitel & Deitel - C How to Program
-//include resources/help from: Stackoverflow.com, Mark Michaelis
-//This is PA7 - 5 Card Draw Poker - rules are from wikipedia,
-//code started with starter code from Deitel & Deitel
+//Programmer: Benjamin Michaelis
+//Description: This is 5 Card Draw Poker run in the windows console - rules are from adopted from wikipedia
+//Includes .c Unit Testing, tests.c
 
 #include "poker.h"
 #include "tests.h"
@@ -21,15 +20,15 @@ int main(void)
     
     do
     {
-        menuoption = runmenu();
-        switch (menuoption)
+        menuoption = runmenu(); //runs menu, checks for valid input
+        switch (menuoption) //loops until 3(exit) is selected
         {
         case 1:
-            displayrules();
+            displayrules(); // just displays the rules
             break;
         case 2:
-            system("cls");
-            game_controller(p1_hand,dealer_hand);
+            system("cls"); //clear screen
+            game_controller(p1_hand,dealer_hand); //this controls all of the game
             break;
         case 3:
             break;

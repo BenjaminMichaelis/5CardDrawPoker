@@ -1,4 +1,4 @@
-#pragma warning (disable: 6031)
+#pragma warning (disable: 6031) //remove scanf warnings 
 #ifndef LOOPS_H // guard code
 #define LOOPS_H
 
@@ -6,6 +6,7 @@
 
 #define TOTAL_NUMBER_OF_SUITS 4
 #define TOTAL_NUMBER_OF_FACES 13
+//TOTAL_NUMBER_OF_CARDS should be 52 (13*4)
 #define TOTAL_NUMBER_OF_CARDS (TOTAL_NUMBER_OF_FACES*TOTAL_NUMBER_OF_SUITS)
 #define NUMBER_OF_CARDS_IN_HAND 5
 

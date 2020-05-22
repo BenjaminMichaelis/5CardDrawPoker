@@ -8,9 +8,9 @@ const char* g_face[TOTAL_NUMBER_OF_FACES] = { "Ace", "Deuce", "Three", "Four", "
     "Nine", "Ten", "Jack", "Queen", "King" };
 
 /* initalize deck array */
-int g_deckMultidimensionalArray[4][TOTAL_NUMBER_OF_FACES] = { 0 };
+int g_deckMultidimensionalArray[4][TOTAL_NUMBER_OF_FACES] = { 0 }; 
 
-Card g_deck[TOTAL_NUMBER_OF_CARDS] = { 0 };
+Card g_deck[TOTAL_NUMBER_OF_CARDS] = { 0 }; //deck of cards
 
 //int cardCount[TOTAL_NUMBER_OF_FACES] = { 0 };
 
@@ -21,21 +21,19 @@ void game_controller(Hand player1Hand, Hand dealerHand)
     int scorep2;
     shuffleDeck();
     deal(&player1Hand, &dealerHand);
-    //p1pair = check_pair(p1_hand);
-    //p12pairs = checkTwoPairs(p1_hand);
     evaluateAndChangeDealersHand(&dealerHand, &cardCount);
     allowPlayerReplaceCards(&player1Hand);
     scorep1 = scoreHand(player1Hand, &cardCount);
     scorep2 = scoreHand(dealerHand, &cardCount);
-    if (scorep1 > scorep2)
+    if (scorep1 < scorep2) //lowest score wins according to scoring in ScoreHand
     {
         printf("\nYou won the game!!\n");
     }
-    if (scorep2 > scorep1)
+    if (scorep2 > scorep1) //lowest score wins
     {
         printf("\nThe computer won the game!!\n");
     }
-    if (scorep1 == scorep2)
+    if (scorep1 == scorep2) // users tie (computer and player)
     {
         printf("\nYou have tied!!\n");
     }
@@ -44,8 +42,9 @@ void game_controller(Hand player1Hand, Hand dealerHand)
 }
 
 
-int runmenu()
+int runmenu() //display menu, return valid user inputted result
 {
+//TODO: implement do while loop in switch statement with default cases
     int menu_input = 0;
     do {
         printf("\nMAIN MENU\n");
@@ -57,27 +56,27 @@ int runmenu()
     return menu_input;
 }
 
-int getint()
+int getint() //get an integer with scanf
 {
     int number;
     scanf("%d", &number);
     return number;
 }
 
-char getChar()
+char getChar() //get a character with scanf
 {
     char character;
     scanf("%c", &character);
     return character;
 }
 
-void displayrules()
+void displayrules() //display rules on screen
 {
     printf("Rules:\n");
     printf("Each player is dealt 5 cards that they can look at.\nYou will then have the opportunity to replace cards in your hand with new cards drawn\nthe player with the best hand will then win\n");
 }
 
-void swap(Card* a, Card* b)
+void swap(Card* a, Card* b) //switch one card with another for shuffling cards
 {
     Card temp = *a;
     *a = *b;
@@ -86,7 +85,7 @@ void swap(Card* a, Card* b)
 
 Card* g_pNextCard;
 int g_currentNextCardIndex; 
-void shuffleDeck()
+void shuffleDeck() //shuffles whole deck, deck is made up of the actual suits and faces (not just int like in starting code)
 {
     g_currentNextCardIndex = 0;
     g_pNextCard = g_deck;
@@ -95,13 +94,13 @@ void shuffleDeck()
     {
         for (int eachFaceCard = 0; eachFaceCard < TOTAL_NUMBER_OF_FACES; eachFaceCard++)
         {
-            g_deck[deckIndex].suit_index = eachSuit;
+            g_deck[deckIndex].suit_index = eachSuit; //
             g_deck[deckIndex].face_index = eachFaceCard;
             deckIndex++;
         }
     }
 
-    for (int i = 0; i < TOTAL_NUMBER_OF_CARDS; i++)
+    for (int i = 0; i < TOTAL_NUMBER_OF_CARDS; i++) 
     {
         // Pick a random index from 0 to i  
         int j = rand() % (i + 1);
@@ -122,7 +121,7 @@ Card pullNextCardFromDeck()
     return *g_pNextCard++;
 }
 
-void deal(Hand* pPlayer1Hand, Hand* pPlayer2Hand)
+void deal(Hand* pPlayer1Hand, Hand* pPlayer2Hand) //deal 10 cards, 5 to each player
 {
     for (int i = 0; i < NUMBER_OF_CARDS_IN_HAND; i++)
     {
@@ -131,7 +130,8 @@ void deal(Hand* pPlayer1Hand, Hand* pPlayer2Hand)
     }
 }
 
-
+// This old starter (incomplete) code from the below authors sparked thoughts on how to approach this program.
+// Authors: Deitel & Deitel - C How to Program
 #ifdef OldCode
 /* shuffle cards in deck */
 void shuffle()
@@ -222,7 +222,7 @@ void deal(Hand p1_hand, Hand dealer_hand)
 #endif OldCode
 
 
-bool check_pair(Hand hand)
+bool check_pair(Hand hand) 
 {
     bool is_pair = false;
     int card = 0, card2 = 0; //pair =0
@@ -239,22 +239,19 @@ bool check_pair(Hand hand)
     return is_pair;
 }
 
-bool checkTwoPairs(Hand hand, Card excludeCards[])
+bool checkTwoPairs(Hand hand, Card excludeCards[])  //
 {
     bool is_pair = false, is_pair2 = false;
     int card = 0, card2 = 0, savecardpair1 = 0; //pair =0
 
     for (card = 0; card < NUMBER_OF_CARDS_IN_HAND; card++)
     {
-        for (card2 = 0; card2 < NUMBER_OF_CARDS_IN_HAND && card2 != card; card2++)
+        for (card2 = 0; card2 < NUMBER_OF_CARDS_IN_HAND && card2 != card; card2++) // doesn't equal the same card that the first pair was found with
         {
             if (hand.player_hand[card].face_index == hand.player_hand[card2].face_index &&
                 hand.player_hand[savecardpair1].face_index != hand.player_hand[card].face_index)
             {
-                /*if (is_pair == true)
-                {*/
                 is_pair2 = true;
-                /* }*/
             }
         }
     }
@@ -267,7 +264,8 @@ bool checkTwoPairs(Hand hand, Card excludeCards[])
 //    int second = sizeof(array[0]);
 //    return first / second;
 //}
-int getMaxElementInArray(int array[], int arraySize)
+
+int getMaxElementInArray(int array[], int arraySize) //get the highest number in array
 {
     int maximum = array[0];
     int arraysize = 0;
@@ -284,9 +282,8 @@ int getMaxElementInArray(int array[], int arraySize)
 }
 
 // Rename to ScoreHand(...)
-int getMaxNumberSameCard(Hand hand, int* cardCountArrayToScoreHand[])
+int getMaxNumberSameCard(Hand hand, int* cardCountArrayToScoreHand[]) //count how many of each card there are and place in corrilated spot in array
 {
-    /*printf("%d,%d,%d", indexForRejectedCards[0], indexForRejectedCards[1], indexForRejectedCards[2]);*/
     int cardCount[TOTAL_NUMBER_OF_FACES] = { 0 };
 
     for (int i = 0; i < NUMBER_OF_CARDS_IN_HAND; i++)
@@ -301,7 +298,7 @@ int getMaxNumberSameCard(Hand hand, int* cardCountArrayToScoreHand[])
 }
 
 //TODO: check address for indexForRejectedCards in lines 160 and 179
-int scoreHand(Hand hand, int* cardCount[])
+int scoreHand(Hand hand, int* cardCount[]) //return score for 
 {
 
     int maxSameCard = getMaxNumberSameCard(hand, cardCount);
@@ -315,7 +312,6 @@ int scoreHand(Hand hand, int* cardCount[])
         score = ScoreValueThreeOfAKind;
         break;
     case 2: // at least one pair
-        // TODO Check for two pair.
         if (checkTwoPair(cardCount))// two pair
         {
             score = ScoreValueTwoPair;
@@ -352,11 +348,11 @@ int scoreHand(Hand hand, int* cardCount[])
     return score;
 }
 
-void evaluateAndChangeDealersHand(Hand* pPlayer2Hand, int* cardCount)
+void evaluateAndChangeDealersHand(Hand* pPlayer2Hand, int* cardCount) //evaluate quality of dealers hand and switch out cards from deck to try and obtain better score
 {
     int score = scoreHand(*pPlayer2Hand, cardCount);
     int index = -1, index2 = -1, tracker = 0;
-    if (score == ScoreValueFourOfAKind)
+    if (score == ScoreValueFourOfAKind) //lowest score is best (did it off of ranking of quality of hand, so because 4 of kind is the 3rd best had in poker, it gets 3 points, etc
     {
         return;
     }
@@ -372,13 +368,13 @@ void evaluateAndChangeDealersHand(Hand* pPlayer2Hand, int* cardCount)
     {
         for (int i = 0; i < 5; i++)
         {
-            if (cardCount[i] == 3)
+            if (cardCount[i] == 3) 
             {
                 index = i;
                 break;
             }
         }
-        for (int j = 0; j < 5; j++)
+        for (int j = 0; j < 5; j++) // replace all cards except the 3 that are the same
         {
             if (pPlayer2Hand->player_hand[j].face_index != index)
             {
@@ -386,7 +382,7 @@ void evaluateAndChangeDealersHand(Hand* pPlayer2Hand, int* cardCount)
             }
         }
     }
-    else if (score == ScoreValueTwoPair)
+    else if (score == ScoreValueTwoPair) //replace the one card that isn't in either of the two pairs
     {
             for (int i = 0; i < 5; i++)
             {
@@ -406,13 +402,13 @@ void evaluateAndChangeDealersHand(Hand* pPlayer2Hand, int* cardCount)
 
         for (int j = 0; j < 5; j++)
         {
-            if (pPlayer2Hand->player_hand[j].face_index != index || pPlayer2Hand->player_hand[j].face_index != index2)
+            if (pPlayer2Hand->player_hand[j].face_index != index || pPlayer2Hand->player_hand[j].face_index != index2) //replace card thats not in eithe of the 2 pairs
             {
                 pPlayer2Hand->player_hand[j] = pullNextCardFromDeck();
             }
         }
     }
-    else if (score == ScoreValuePair)
+    else if (score == ScoreValuePair) //replace all cards not in pair
     {
         {
             for (int i = 0; i < 5; i++)
@@ -434,7 +430,7 @@ void evaluateAndChangeDealersHand(Hand* pPlayer2Hand, int* cardCount)
     }
 }
 
-void allowPlayerReplaceCards(Hand* pPlayer1Hand)
+void allowPlayerReplaceCards(Hand* pPlayer1Hand) // take in user input for cards to be replaced, and replace it from deck
 {
     int numberCardsYouHaveReplaced = 0;
     char charinput;
@@ -457,7 +453,7 @@ void allowPlayerReplaceCards(Hand* pPlayer1Hand)
                 printf("What card number do you want to replace?\n");
                 replaceCard = getint();
             } while (replaceCard > 4 || replaceCard < 0);
-            pPlayer1Hand->player_hand[replaceCard] = pullNextCardFromDeck();
+            pPlayer1Hand->player_hand[replaceCard] = pullNextCardFromDeck(); //actually get next card from deck and replace card in hand with it
             printf("Do you want to replace another card (Y or N)?\n");
             getchar();
             charinput = getchar();
@@ -469,7 +465,7 @@ void allowPlayerReplaceCards(Hand* pPlayer1Hand)
     }
 }
 
-bool checkStraight(Hand hand)
+bool checkStraight(Hand hand) //check if straight exists
 {
     bubble_sort(&hand, NUMBER_OF_CARDS_IN_HAND);
     for (int i = 1; i < NUMBER_OF_CARDS_IN_HAND; i++)
@@ -482,7 +478,7 @@ bool checkStraight(Hand hand)
     return true;
 }
 
-bool checkFlush(Hand hand)
+bool checkFlush(Hand hand) // check if flush (all same suit) exists
 {
     for (int i = 1; i < NUMBER_OF_CARDS_IN_HAND; i++)
     {
@@ -494,7 +490,7 @@ bool checkFlush(Hand hand)
     return true;
 }
 
-void bubble_sort(Hand* hand, int num_items)
+void bubble_sort(Hand* hand, int num_items) //sort cards in hand to be in order
 {
     int passes = 0, temp = 0, index = 0;
 
@@ -513,7 +509,7 @@ void bubble_sort(Hand* hand, int num_items)
     }
 }
 
-bool checkTwoPair(int * cardCount[])
+bool checkTwoPair(int * cardCount[]) //check if two pairs exist
 {
     int numberOfPairs = 0;
     for (int i = 0; i < TOTAL_NUMBER_OF_FACES; i++)

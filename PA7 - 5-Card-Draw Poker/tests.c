@@ -1,6 +1,8 @@
 #include "tests.h"
 #include "poker.h"
 
+//all funtions that are Test_functionname, the function name corrilates to the function in poker.c that it tests.
+
 void runAllTests()
 {
     Test_shuffleDeck();
@@ -9,6 +11,8 @@ void runAllTests()
     Test_getMaxElementInArray();
     Test_getMaxNumberSameCard();
     Test_checkStraight();
+    Test_evaluateAndChangeDealersHand();
+    Test_checkTwoPairtest();
 }
 
 
@@ -101,6 +105,17 @@ bool allItemsAreUniqueAndShuffled(Card* pDeck, int length)
     return (countSuitChanged > length / TOTAL_NUMBER_OF_FACES || countFaceCardChangeByMoreThan1 > length / TOTAL_NUMBER_OF_SUITS);
 }
 
+void Test_checkTwoPairtest()
+{
+    bool test;
+    char duplicateCardsMessage[1024 * 2] = { 0 };
+    sprintf(duplicateCardsMessage, "%s", "Check Two pair is not working ");
+    int actualCountCards[TOTAL_NUMBER_OF_FACES] = { 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2 };
+    test = checkTwoPair(actualCountCards);
+    AssertIsTrue(test,duplicateCardsMessage);
+}
+
+
 void Test_getMaxNumberSameCard()
 {
     Hand testHand = { 0 };
@@ -140,6 +155,23 @@ void resetArray(int array[], int length)
     {
         array[i] = 0;
     }
+}
+
+void Test_evaluateAndChangeDealersHand()
+{
+    int score;
+    Hand testhand = { 0 };
+    int cardCount[TOTAL_NUMBER_OF_FACES] = { 0 };
+    testhand.player_hand[0].face_index = 0;
+    testhand.player_hand[1].face_index = 12;
+    testhand.player_hand[2].face_index = 12;
+    testhand.player_hand[3].face_index = 3;
+    testhand.player_hand[4].face_index = 12;
+    score = scoreHand(testhand, cardCount);
+    evaluateAndChangeDealersHand(&testhand, cardCount);
+    AreIntNotEqual(3, testhand.player_hand[3].face_index, "1. Exchanged Cards were unexpected");
+    AreIntNotEqual(0, testhand.player_hand[0].face_index, "1. Exchanged Cards were unexpected");
+
 }
 
 void Test_scoreHand()
@@ -215,7 +247,6 @@ void Test_checkStraight()
 void printTestFailed(const char* message)
 {
     char localMessage[254];
-    // TODO: Append expected and actual to the message to you can read the problem in the output.
     sprintf(localMessage, "%s%s%s%s", "\033[1;31m", message, "", "\033[0m");
     printf(localMessage);
 }
@@ -248,12 +279,10 @@ void AssertArraysAreEqual(int expected[], int actual[], const char* message, int
     }
 }
 
-
 void AssertIntsAreEqual(int expected, int actual, const char* message)
 {
     if (actual != expected)
     {
-        // TODO: Append expected and actual to the message to you can read the problem in the output.
         printTestFailed(message);
         printf("\n");
     };
@@ -264,7 +293,6 @@ void AreIntNotEqual(int expected, int actual, const char* message)
     if (actual == expected)
     {
         char localMessage[254];
-        // TODO: Append expected and actual to the message to you can read the problem in the output.
         sprintf(localMessage, "%s (Expected = %d, Actual= %d)", message, expected, actual);
         printTestFailed(localMessage);
         //printf("\n");
@@ -275,7 +303,6 @@ void AssertIsTrue(bool condition, const char* message)
 {
     if (!condition)
     {
-        // TODO: Append expected and actual to the message to you can read the problem in the output.
         printTestFailed(message);
         printf("\n");
     };

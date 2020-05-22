@@ -6,6 +6,8 @@ void setHand(Hand* pHand, int values[], int length);
 
 void resetArray(int array[], int length);
 
+void Test_evaluateAndChangeDealersHand();
+
 void Test_scoreHand();
 
 void AssertIntsAreEqual(int expected, int actual, const char*  message);
@@ -24,6 +26,8 @@ void runAllTests();
 void Test_shuffleDeck();
 
 bool allItemsAreUniqueAndShuffled(Card * pDeck, int length);
+
+void Test_checkTwoPairtest();
 
 void Test_deal();
 
