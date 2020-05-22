@@ -24,7 +24,7 @@ int main(void)
         switch (menuoption) //loops until 3(exit) is selected
         {
         case 1:
-            displayrules(); // just displays the rules
+            displayrules(); // just displays the rules on screen
             break;
         case 2:
             system("cls"); //clear screen
@@ -34,7 +34,7 @@ int main(void)
             break;
         }
 
-    } while (menuoption != 3);
+    } while (menuoption != 3); //exit when option 3 is entered by user
 
     printf("Thank you for playing 5 card draw");
 
